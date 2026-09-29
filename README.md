@@ -45,6 +45,13 @@ cd ~/dotfiles && ./sync.sh && git add -A && git commit -m "update" && git push
 
 `sync.sh` copies the live configs into `home/`, strips machine-specific git credential helpers, and refuses to finish if it spots anything that looks like a secret.
 
+
+# Screenshot of Rice
+
+
+![Uploading image.png…]()
+
+
 ## Secrets
 
 Secrets never go in this repo. `.bashrc` sources `~/.bashrc.secrets`, which is git-ignored and `chmod 600`.
