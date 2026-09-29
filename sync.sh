@@ -61,19 +61,24 @@ for section in 'credential.https://github.com' 'credential.https://gist.github.c
   git config --file "$DEST/.config/git/config" --remove-section "$section" 2>/dev/null || true
 done
 
-# Firefox: profile folder names are random per machine, so the custom CSS and
-# user.js live in firefox/ and are copied from whichever profile is the default.
-source "$REPO/firefox-profile.sh"
-if FF_PROFILE="$(firefox_default_profile)"; then
-  mkdir -p "$REPO/firefox/chrome"
-  rsync -a --delete "${EXCLUDES[@]}" --exclude='*.bak-*' "$FF_PROFILE/chrome/" "$REPO/firefox/chrome/"
-  cp -a "$FF_PROFILE/user.js" "$REPO/firefox/user.js"
-else
-  echo "skip (missing): Firefox default profile"
-fi
+# Firefox and Zen: profile folder names are random per machine, so the custom
+# CSS and user.js live in firefox/ and zen/ and are copied from whichever
+# profile is the default. zen-themes.css is left out: Zen regenerates it from Mods.
+source "$REPO/browser-profile.sh"
+for browser in firefox zen; do
+  if profile="$(browser_default_profile "$browser")"; then
+    mkdir -p "$REPO/$browser/chrome"
+    rsync -a --delete "${EXCLUDES[@]}" --exclude='*.bak-*' --exclude='zen-themes.css' \
+      "$profile/chrome/" "$REPO/$browser/chrome/"
+    cp -a "$profile/user.js" "$REPO/$browser/user.js"
+    chmod 644 "$REPO/$browser/chrome/"*.css
+  else
+    echo "skip (missing): $browser default profile"
+  fi
+done
 
 # Refuse to continue if anything secret-looking slipped in
-if grep -rInE '(API_KEY|TOKEN|SECRET|PASSWORD)=["'\'']?[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}' "$DEST" "$REPO/firefox"; then
+if grep -rInE '(API_KEY|TOKEN|SECRET|PASSWORD)=["'\'']?[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}' "$DEST" "$REPO/firefox" "$REPO/zen"; then
   echo "!! Possible secret found above. Move it to ~/.bashrc.secrets before committing." >&2
   exit 1
 fi

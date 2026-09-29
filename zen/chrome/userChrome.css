@@ -1,0 +1,238 @@
+/* ==========================================================================
+   Firefox Square UI & JetBrains Mono Nerd Font Theme
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Universal Font Override (JetBrains Mono Nerd Font)
+   -------------------------------------------------------------------------- */
+* {
+    font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace !important;
+}
+
+#navigator-toolbox,
+#TabsToolbar,
+#nav-bar,
+#PersonalToolbar,
+#urlbar,
+#searchbar,
+.tabbrowser-tab,
+.tab-text,
+.tab-label,
+.toolbarbutton-text,
+.toolbarbutton-1,
+menupopup,
+menuitem,
+menu,
+panelview,
+tooltip,
+findbar,
+#sidebar-header,
+#sidebar-box,
+#sidebar {
+    font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace !important;
+}
+
+/* --------------------------------------------------------------------------
+   Global Border Radius Reset (Completely Square UI)
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+    border-radius: 0px !important;
+}
+
+:root {
+    --tab-border-radius: 0px !important;
+    --tab-border-radius-custom: 0px !important;
+    --arrowpanel-border-radius: 0px !important;
+    --toolbarbutton-border-radius: 0px !important;
+    --urlbar-icon-border-radius: 0px !important;
+    --urlbar-inner-border-radius: 0px !important;
+    --panel-border-radius: 0px !important;
+    --button-border-radius: 0px !important;
+    --inline-options-border-radius: 0px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Tabs Toolbar & Tab Styling (Sharp Square Tabs)
+   -------------------------------------------------------------------------- */
+#TabsToolbar,
+.tabbrowser-tab,
+.tabbrowser-tab .tab-stack,
+.tabbrowser-tab .tab-background,
+.tabbrowser-tab .tab-content,
+.tabbrowser-tab .tab-loading-burst,
+.tabbrowser-tab .tab-label-container,
+.tab-close-button,
+#tabs-newtab-button,
+#new-tab-button,
+.tabs-newtab-button {
+    border-radius: 0px !important;
+}
+
+.tab-background {
+    border-radius: 0px !important;
+    box-shadow: none !important;
+}
+
+.tabbrowser-tab[selected="true"] .tab-background {
+    border-radius: 0px !important;
+}
+
+.tab-close-button {
+    border-radius: 0px !important;
+}
+
+.tabbrowser-tab[pinned] .tab-background {
+    border-radius: 0px !important;
+}
+
+/* --------------------------------------------------------------------------
+   URL Bar / Address Bar & Search Bar
+   -------------------------------------------------------------------------- */
+#urlbar,
+#urlbar-background,
+#urlbar-input-container,
+.urlbar-input-box,
+#urlbar-input,
+#searchbar,
+.searchbar-textbox,
+.searchbar-search-button,
+.searchbar-engine-image {
+    border-radius: 0px !important;
+    box-shadow: none !important;
+}
+
+#urlbar[open] > #urlbar-background,
+#urlbar-results,
+.urlbarView,
+.urlbarView-results,
+.urlbarView-body-inner,
+.urlbarView-row,
+.urlbarView-row-inner,
+.urlbarView-action,
+.urlbarView-title {
+    border-radius: 0px !important;
+}
+
+#urlbar-input-container toolbarbutton,
+#identity-box,
+#identity-permission-box,
+#identity-icon-box,
+#identity-box:hover,
+#identity-permission-box:hover,
+#tracking-protection-icon-container,
+.urlbar-page-action,
+.urlbar-icon,
+.urlbar-addon-page-action {
+    border-radius: 0px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Toolbar Buttons & Navigation Bar
+   -------------------------------------------------------------------------- */
+toolbarbutton,
+.toolbarbutton-1,
+.toolbarbutton-icon,
+.toolbarbutton-badge-stack,
+.toolbarbutton-text,
+#nav-bar toolbarbutton,
+#TabsToolbar toolbarbutton,
+#PersonalToolbar toolbarbutton {
+    border-radius: 0px !important;
+}
+
+/* Bookmarks Toolbar */
+#PersonalToolbar,
+#PlacesToolbarItems,
+.bookmark-item,
+toolbarbutton.bookmark-item {
+    border-radius: 0px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Menus, Popups, Context Menus, and Panels
+   -------------------------------------------------------------------------- */
+menupopup,
+menupopup > menuitem,
+menupopup > menu,
+menupopup menuseparator,
+menu,
+menuitem,
+panel,
+panelview,
+.panel-arrowcontent,
+.panel-subview-body,
+.panel-header,
+.panel-footer,
+.subviewbutton,
+.menupopup-arrowscrollbox,
+arrowscrollbox {
+    border-radius: 0px !important;
+}
+
+menupopup menuitem:hover,
+menupopup menu:hover,
+menuitem:hover,
+menu:hover,
+.subviewbutton:hover {
+    border-radius: 0px !important;
+}
+
+/* App Menu & Extension Panels */
+#appMenu-popup,
+#appMenu-mainView,
+#unified-extensions-panel,
+#unified-extensions-view {
+    border-radius: 0px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Findbar, Dialogs, Tooltips, and Other UI Elements
+   -------------------------------------------------------------------------- */
+findbar,
+findbar textbox,
+findbar toolbarbutton,
+.findbar-textbox,
+.findbar-container,
+.findbar-find-previous,
+.findbar-find-next,
+.findbar-highlight,
+.findbar-case-sensitive,
+.findbar-match-diacritics,
+.findbar-entire-word {
+    border-radius: 0px !important;
+}
+
+tooltip,
+.tooltip {
+    border-radius: 0px !important;
+}
+
+/* Buttons and Inputs across the UI */
+button,
+input,
+select,
+textarea {
+    border-radius: 0px !important;
+    font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace !important;
+}
+
+/* Notification Boxes and Doorhangers */
+notificationbox,
+notification-message,
+.notificationbox-stack,
+.popup-notification-box,
+.popup-notification-body {
+    border-radius: 0px !important;
+}
+
+/* Sidebar & Library */
+#sidebar-box,
+#sidebar-header,
+#sidebar,
+#sidebar-splitter,
+#sidebar-switcher-target {
+    border-radius: 0px !important;
+    font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace !important;
+}

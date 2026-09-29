@@ -1,0 +1,24 @@
+/* ==========================================================================
+   Firefox userContent.css — Square corners & JetBrains Mono Nerd Font
+   Applied to EVERY website and about: page.
+   ========================================================================== */
+
+/* ── All web pages ──────────────────────────────────────────────────────── */
+@-moz-document url-prefix("http://"), url-prefix("https://"), url-prefix("file://") {
+    *,
+    *::before,
+    *::after {
+        font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace !important;
+        border-radius: 0 !important;
+    }
+}
+
+/* ── Firefox internal / about: pages ────────────────────────────────────── */
+@-moz-document url-prefix("about:") {
+    *,
+    *::before,
+    *::after {
+        font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace !important;
+        border-radius: 0 !important;
+    }
+}
