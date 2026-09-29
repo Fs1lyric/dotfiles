@@ -1,6 +1,6 @@
 # dotfiles
 
-My [Omarchy](https://omarchy.org) (Arch + Hyprland) setup.
+My [Omarchy](https://omarchy.org) (Arch + Hyprland) setup. **[See it here →](https://fs1lyric.github.io/dotfiles/)**
 
 ## What's here
 
