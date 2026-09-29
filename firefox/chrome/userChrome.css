@@ -1,0 +1,313 @@
+/* ==========================================================================
+   Zen-style Firefox (Firefox 154, native vertical tabs)
+   Previous version: userChrome.css.bak-20260925-114452
+   ========================================================================== */
+
+:root {
+  --zen-gap: 8px;                /* space around the web content */
+  --zen-radius: 10px;            /* web content corners */
+  --zen-radius-small: 8px;       /* tabs, URL bar, buttons */
+  --zen-shadow: 0 2px 10px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06);
+
+  /* The window frame colour, and the accent the gradient blends in. The
+     accent changes with the container of the selected tab (see "Workspace
+     colours" below); with no container it is this violet. */
+  --zen-base: var(--toolbox-background-color, var(--toolbar-bgcolor));
+  --zen-accent: #7c5cff;
+  --zen-glow: 28%;               /* gradient strength, top left */
+  --zen-glow-far: 14%;           /* gradient strength, bottom right */
+  --zen-bg:
+    radial-gradient(ellipse at 0% 0%,
+      color-mix(in srgb, var(--zen-accent) var(--zen-glow), transparent), transparent 60%),
+    radial-gradient(ellipse at 100% 100%,
+      color-mix(in srgb, var(--zen-accent) var(--zen-glow-far), transparent), transparent 55%),
+    var(--zen-base);
+
+  --tab-border-radius: var(--zen-radius-small) !important;
+  --toolbarbutton-border-radius: var(--zen-radius-small) !important;
+  --urlbar-border-radius: var(--zen-radius-small) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Theme changer: presets picked in about:config, applied instantly
+   (no restart).
+
+   about:config  ->  zen.theme  (String)  ->  one of:
+     violet (default) · ocean · forest · sunset · rose · amber · nord ·
+     mocha · mono · system
+
+   Each preset has a light and a dark background, chosen by Firefox's own
+   light/dark setting, so text stays readable. "system" keeps Firefox's
+   frame colour and only adds the violet glow.
+
+   Optional, also in about:config:
+     zen.theme.vivid               (Boolean) true = stronger gradient
+     zen.theme.flat                (Boolean) true = no gradient at all
+     zen.theme.ignoreContainers    (Boolean) true = keep the preset colour
+                                   instead of the tab's container colour
+   -------------------------------------------------------------------------- */
+@media not -moz-pref("zen.theme", "system") {
+  :root {
+    --zen-base: light-dark(#f1eefb, #17141f);
+  }
+}
+
+@media -moz-pref("zen.theme", "ocean") {
+  :root {
+    --zen-accent: #2e9bff;
+    --zen-base: light-dark(#e9f2fa, #0e1822);
+  }
+}
+
+@media -moz-pref("zen.theme", "forest") {
+  :root {
+    --zen-accent: #3fb66b;
+    --zen-base: light-dark(#ebf4ec, #0f1a13);
+  }
+}
+
+@media -moz-pref("zen.theme", "sunset") {
+  :root {
+    --zen-accent: #ff7a45;
+    --zen-base: light-dark(#fbefe8, #1f1410);
+  }
+}
+
+@media -moz-pref("zen.theme", "rose") {
+  :root {
+    --zen-accent: #f25f9c;
+    --zen-base: light-dark(#fbedf3, #1f1219);
+  }
+}
+
+@media -moz-pref("zen.theme", "amber") {
+  :root {
+    --zen-accent: #f2b233;
+    --zen-base: light-dark(#faf4e6, #1c170d);
+  }
+}
+
+@media -moz-pref("zen.theme", "nord") {
+  :root {
+    --zen-accent: #88c0d0;
+    --zen-base: light-dark(#eceff4, #2e3440);
+  }
+}
+
+@media -moz-pref("zen.theme", "mocha") {
+  :root {
+    --zen-accent: #cba6f7;
+    --zen-base: light-dark(#eff1f5, #1e1e2e);
+  }
+}
+
+@media -moz-pref("zen.theme", "mono") {
+  :root {
+    --zen-accent: light-dark(#6b6b78, #9a9aa8);
+    --zen-base: light-dark(#f2f2f4, #151518);
+    --zen-glow: 16%;
+    --zen-glow-far: 8%;
+  }
+}
+
+@media -moz-pref("zen.theme.vivid") {
+  :root {
+    --zen-glow: 48%;
+    --zen-glow-far: 30%;
+  }
+}
+
+@media -moz-pref("zen.theme.flat") {
+  :root {
+    --zen-glow: 0%;
+    --zen-glow-far: 0%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   UI font (kept from the previous userChrome.css)
+   -------------------------------------------------------------------------- */
+#navigator-toolbox,
+#sidebar-main,
+#sidebar-box,
+menupopup,
+panel,
+tooltip {
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace !important;
+}
+
+/* --------------------------------------------------------------------------
+   Seamless background: one gradient painted on the window itself, with the
+   toolbar, sidebar and the area around the content transparent over it, so
+   there are no seams or borders between them
+   -------------------------------------------------------------------------- */
+:root {
+  background: var(--zen-bg) !important;
+}
+
+#navigator-toolbox,
+#browser,
+#tabbrowser-tabbox,
+#tabbrowser-tabpanels,
+#sidebar-box,
+#nav-bar,
+#TabsToolbar,
+#PersonalToolbar,
+#sidebar-main,
+sidebar-main,
+#vertical-tabs {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#sidebar-launcher-splitter,
+#sidebar-splitter {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   Floating web content: a gap on every side, round corners, soft shadow
+   -------------------------------------------------------------------------- */
+.browserContainer {
+  margin: 0 var(--zen-gap) var(--zen-gap) var(--zen-gap) !important;
+  border-radius: var(--zen-radius) !important;
+  overflow: clip !important;
+  outline: none !important;
+  box-shadow: var(--zen-shadow) !important;
+}
+
+/* Dialogs over a page follow its rounded corners */
+.dialogOverlay[topmost="true"] {
+  border-radius: var(--zen-radius) !important;
+}
+
+/* Fullscreen video and fullscreen windows: edge to edge, no rounding */
+:root[inDOMFullscreen] .browserContainer,
+:root[sizemode="fullscreen"] .browserContainer {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   Rounded tabs
+   -------------------------------------------------------------------------- */
+.tabbrowser-tab .tab-background {
+  border-radius: var(--zen-radius-small) !important;
+  box-shadow: none !important;
+}
+
+.tabbrowser-tab[selected] .tab-background {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Rounded URL bar
+   -------------------------------------------------------------------------- */
+#urlbar-background,
+#urlbar-input-container,
+#searchbar {
+  border-radius: var(--zen-radius-small) !important;
+}
+
+/* The results panel opens out of the URL bar; keep its corners matching */
+#urlbar[open] > #urlbar-background,
+.urlbarView {
+  border-radius: var(--zen-radius) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Workspace colours: the window gradient takes the colour of the selected
+   tab's container (Multi-Account Containers), like Zen's per-workspace
+   gradients. Tabs outside any container keep the default accent.
+   -------------------------------------------------------------------------- */
+@media not -moz-pref("zen.theme.ignoreContainers") {
+  :root:has(.tabbrowser-tab[selected].identity-color-blue)   { --zen-accent: #37adff; }
+  :root:has(.tabbrowser-tab[selected].identity-color-cyan)   { --zen-accent: #00c79a; }
+  :root:has(.tabbrowser-tab[selected].identity-color-green)  { --zen-accent: #51cd00; }
+  :root:has(.tabbrowser-tab[selected].identity-color-yellow) { --zen-accent: #ffcb00; }
+  :root:has(.tabbrowser-tab[selected].identity-color-orange) { --zen-accent: #ff9f00; }
+  :root:has(.tabbrowser-tab[selected].identity-color-red)    { --zen-accent: #ff613d; }
+  :root:has(.tabbrowser-tab[selected].identity-color-pink)   { --zen-accent: #ff4bda; }
+  :root:has(.tabbrowser-tab[selected].identity-color-purple) { --zen-accent: #af51f5; }
+  :root:has(.tabbrowser-tab[selected].identity-color-violet) { --zen-accent: #764edd; }
+  :root:has(.tabbrowser-tab[selected].identity-color-gray)   { --zen-accent: #8f8f9d; }
+}
+
+/* --------------------------------------------------------------------------
+   Essentials: pinned tabs become a grid of icon tiles at the top of the
+   sidebar while it is expanded (Zen's Essentials). Collapsed, they stay a
+   column of icons. Pin a tab with right-click > Pin Tab.
+   -------------------------------------------------------------------------- */
+#tabbrowser-tabs[expanded] > #pinned-tabs-container[orient="vertical"]::part(items-wrapper) {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-rows: 44px !important;
+  gap: 6px !important;
+  padding: 4px 6px !important;
+}
+
+#tabbrowser-tabs[expanded] > #pinned-tabs-container[orient="vertical"] .tabbrowser-tab {
+  min-width: 0 !important;
+  max-width: none !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#tabbrowser-tabs[expanded] > #pinned-tabs-container[orient="vertical"] .tab-stack,
+#tabbrowser-tabs[expanded] > #pinned-tabs-container[orient="vertical"] .tab-background {
+  height: 100% !important;
+  margin: 0 !important;
+}
+
+#tabbrowser-tabs[expanded] > #pinned-tabs-container[orient="vertical"] .tab-background {
+  border-radius: var(--zen-radius) !important;
+  background-color: color-mix(in srgb, currentColor 8%, transparent) !important;
+}
+
+#tabbrowser-tabs[expanded] > #pinned-tabs-container[orient="vertical"] .tabbrowser-tab[selected] .tab-background {
+  background-color: color-mix(in srgb, var(--zen-accent) 30%, transparent) !important;
+}
+
+#tabbrowser-tabs[expanded] > #pinned-tabs-container[orient="vertical"] .tab-content {
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+#tabbrowser-tabs[expanded] > #pinned-tabs-container[orient="vertical"] .tab-label-container,
+#tabbrowser-tabs[expanded] > #pinned-tabs-container[orient="vertical"] .tab-close-button {
+  display: none !important;
+}
+
+/* No divider under the Essentials grid */
+#vertical-pinned-tabs-splitter {
+  border-top-color: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   Optional: auto-hiding toolbar
+   The toolbar slides away and comes back when the pointer reaches the top
+   of the window or the URL bar gets focus (Ctrl+L). Remove the opening and
+   closing comment lines around the block to turn it on.
+   -------------------------------------------------------------------------- */
+/*
+#navigator-toolbox {
+  min-height: 6px !important;
+}
+
+#nav-bar {
+  margin-top: calc(-1 * var(--tab-min-height, 40px)) !important;
+  opacity: 0 !important;
+  transition: margin-top 180ms ease, opacity 180ms ease !important;
+}
+
+#navigator-toolbox:hover #nav-bar,
+#navigator-toolbox:focus-within #nav-bar,
+#nav-bar:has(#urlbar[open]) {
+  margin-top: 0 !important;
+  opacity: 1 !important;
+}
+*/

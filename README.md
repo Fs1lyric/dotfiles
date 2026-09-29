@@ -12,6 +12,7 @@ My [Omarchy](https://omarchy.org) (Arch + Hyprland) setup.
 | Desktop | `hypr/` (Hyprland, Lua config), `omarchy/` (bar layout, hooks, menu, backgrounds, `lyric.launchers` bar plugin) |
 | Terminals | `alacritty/`, `ghostty/`, `kitty/`, `foot/`, `tmux/` |
 | Editors | `nvim/` (LazyVim), `doom/`, `.doom.d/` |
+| Firefox | `firefox/chrome/userChrome.css`, `userContent.css`, `user.js` (vertical tabs, compact, Zen-style) |
 | Tools | `git/`, `mise/` (claude, codex, gh, node, python…), `btop/`, `fastfetch/`, `cava/` |
 
 ## Install on a new machine
@@ -21,7 +22,9 @@ git clone https://github.com/Fs1lyric/dotfiles ~/dotfiles
 ~/dotfiles/install.sh
 ```
 
-`install.sh` copies everything in `home/` into `$HOME`. Any file it would overwrite is backed up to `~/.dotfiles-backup/<timestamp>/` first.
+Open Firefox once before running it, so a profile exists for the CSS to go into.
+
+`install.sh` copies everything in `home/` into `$HOME`, and `firefox/` into Firefox's default profile. Any file it would overwrite is backed up to `~/.dotfiles-backup/<timestamp>/` first.
 
 Then:
 

@@ -61,8 +61,19 @@ for section in 'credential.https://github.com' 'credential.https://gist.github.c
   git config --file "$DEST/.config/git/config" --remove-section "$section" 2>/dev/null || true
 done
 
+# Firefox: profile folder names are random per machine, so the custom CSS and
+# user.js live in firefox/ and are copied from whichever profile is the default.
+source "$REPO/firefox-profile.sh"
+if FF_PROFILE="$(firefox_default_profile)"; then
+  mkdir -p "$REPO/firefox/chrome"
+  rsync -a --delete "${EXCLUDES[@]}" --exclude='*.bak-*' "$FF_PROFILE/chrome/" "$REPO/firefox/chrome/"
+  cp -a "$FF_PROFILE/user.js" "$REPO/firefox/user.js"
+else
+  echo "skip (missing): Firefox default profile"
+fi
+
 # Refuse to continue if anything secret-looking slipped in
-if grep -rInE '(API_KEY|TOKEN|SECRET|PASSWORD)=["'\'']?[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}' "$DEST"; then
+if grep -rInE '(API_KEY|TOKEN|SECRET|PASSWORD)=["'\'']?[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}' "$DEST" "$REPO/firefox"; then
   echo "!! Possible secret found above. Move it to ~/.bashrc.secrets before committing." >&2
   exit 1
 fi
