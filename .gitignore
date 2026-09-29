@@ -1,0 +1,6 @@
+*.bak
+*.bak.*
+*.old
+.bashrc.secrets
+*.secrets
+.env

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lyric.launchers",
+  "name": "App Launchers",
+  "version": "1.0.0",
+  "author": "lyric",
+  "license": "MIT",
+  "description": "Launch or focus Firefox, Codex, VS Code, Obsidian, Notion, and Claude Code from the bar.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "App Launchers",
+    "description": "Launch or focus Firefox, Codex, VS Code, Obsidian, Notion, and Claude Code.",
+    "category": "Apps",
+    "allowMultiple": false,
+    "defaultSection": "left"
+  }
+}
