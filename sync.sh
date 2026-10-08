@@ -24,6 +24,8 @@ PATHS=(
   .config/omarchy/plugins/lyric.tray
   .cache/nwg-dock-pinned
   .config/nwg-dock-hyprland
+  .config/systemd/user/omarchy-crash-watch.service.d
+  .local/bin/omarchy-crash-watch-normal
   .local/share/applications/trash.desktop
   .local/share/applications/chrome-web.whatsapp.com__-Default.desktop
   .config/alacritty
