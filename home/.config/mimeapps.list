@@ -28,6 +28,7 @@ application/x-010workspace=010editor-project.desktop
 x-scheme-handler/figma=figma-linux.desktop
 x-scheme-handler/antigravity=antigravity.desktop
 x-scheme-handler/openmausbot=com.openmausbot.app.desktop
+x-scheme-handler/obsidian=md.obsidian.Obsidian.desktop
 
 [Added Associations]
 x-scheme-handler/http=zen.desktop;
@@ -41,3 +42,4 @@ application/xhtml+xml=zen.desktop;
 application/x-extension-xhtml=zen.desktop;
 application/x-extension-xht=zen.desktop;
 x-scheme-handler/openmausbot=com.openmausbot.app.desktop;
+x-scheme-handler/obsidian=md.obsidian.Obsidian.desktop;
