@@ -27,3 +27,11 @@
 -- o.bind("SUPER + SHIFT + S", nil, "omarchy-capture-screenshot")
 -- o.bind("SUPER + H", nil, "voxtype record toggle")
 -- o.bind("SUPER + PERIOD", nil, "omarchy-shell shell toggle omarchy.emojis")
+
+-- Hold SUPER and drag a window to pop it out of tiling; it stays floating where you drop it.
+-- SUPER + T (Omarchy default) snaps it back into the tiles. New apps still open tiled.
+-- Unbind existing SUPER + LMB (was: move window within the tiles)
+hl.unbind("SUPER + mouse:272")
+-- Two binds on one key, run top to bottom: float the window first, then hand it to the drag.
+hl.bind("SUPER + mouse:272", hl.dsp.window.float({ action = "set" }), { non_consuming = true, description = "Pop window out of tiling" })
+hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Drag window" })

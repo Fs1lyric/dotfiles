@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Called with the snake-cased name of the theme that was just set.
+# On the macOS Glass theme, swap Omarchy's Adwaita app theme and default cursor
+# for WhiteSur (installed from the AUR). Other themes keep Omarchy's defaults.
+
+gtk_theme=WhiteSur-Dark
+cursor_theme=WhiteSur-cursors
+
+if [[ $1 == "macos-glass" ]]; then
+  [[ -d /usr/share/themes/$gtk_theme ]] && gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
+  if [[ -d /usr/share/icons/$cursor_theme ]]; then
+    gsettings set org.gnome.desktop.interface cursor-theme "$cursor_theme"
+    hyprctl setcursor "$cursor_theme" 24 >/dev/null
+  fi
+  gsettings set org.gnome.desktop.interface font-name "Inter 11"
+else
+  gsettings reset org.gnome.desktop.interface cursor-theme
+  gsettings reset org.gnome.desktop.interface font-name
+  hyprctl setcursor default 24 >/dev/null
+fi

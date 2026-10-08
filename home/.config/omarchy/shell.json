@@ -1,34 +1,29 @@
 {
   "bar": {
-    "centerAnchor": "omarchy.clock",
+    "centerAnchor": "lyric.dayclock",
     "layout": {
       "center": [
         {
-          "id": "omarchy.workspaces"
+          "id": "lyric.dayclock"
+        }
+      ],
+      "left": [
+        {
+          "id": "omarchy.menu"
         },
+        {
+          "id": "omarchy.workspaces"
+        }
+      ],
+      "right": [
         {
           "id": "omarchy.indicators"
         },
         {
-          "id": "omarchy.clock",
-          "format": "ddd d MMM h:mm AP",
-          "formatAlt": "d MMMM 'W'ww yyyy",
-          "verticalFormat": "HH\n—\nmm"
-        },
-        {
-          "id": "omarchy.keyboard-layout"
-        },
-        {
-          "id": "omarchy.weather"
-        },
-        {
           "id": "omarchy.system-update"
-        }
-      ],
-      "left": [],
-      "right": [
+        },
         {
-          "id": "omarchy.tray",
+          "id": "lyric.tray",
           "pinned": [
             "vesktop_status_icon_1",
             "chrome_status_icon_1"
@@ -36,34 +31,40 @@
           "hidden": []
         },
         {
-          "id": "lyric.launchers"
+          "id": "io.github.jeremylanger.omaspotify"
         },
         {
           "id": "io.github.ef-code.wallpaper-explorer"
         },
         {
-          "id": "omarchy.menu"
-        },
-        {
-          "id": "omarchy.network"
-        },
-        {
-          "id": "io.github.jeremylanger.omaspotify"
-        },
-        {
-          "id": "omarchy.bluetooth"
-        },
-        {
           "id": "omarchy.agents"
         },
         {
-          "id": "omarchy.audio"
+          "id": "omarchy.weather"
+        },
+        {
+          "id": "omarchy.keyboard-layout"
         },
         {
           "id": "omarchy.monitor"
         },
         {
+          "id": "omarchy.bluetooth"
+        },
+        {
+          "id": "omarchy.network"
+        },
+        {
+          "id": "omarchy.audio"
+        },
+        {
           "id": "omarchy.power"
+        },
+        {
+          "id": "omarchy.clock",
+          "format": "ddd d MMM  h:mm AP",
+          "formatAlt": "d MMMM 'W'ww yyyy",
+          "verticalFormat": "HH\n—\nmm"
         }
       ]
     },

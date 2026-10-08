@@ -1,9 +1,9 @@
 [Default Applications]
-text/html=firefox.desktop
-x-scheme-handler/http=firefox.desktop
-x-scheme-handler/https=firefox.desktop
-x-scheme-handler/about=firefox.desktop
-x-scheme-handler/unknown=firefox.desktop
+text/html=zen.desktop
+x-scheme-handler/http=zen.desktop
+x-scheme-handler/https=zen.desktop
+x-scheme-handler/about=zen.desktop
+x-scheme-handler/unknown=zen.desktop
 x-scheme-handler/mailto=helium.desktop
 x-scheme-handler/chrome=zen.desktop
 application/x-extension-htm=zen.desktop
@@ -27,6 +27,7 @@ application/x-010project=010editor-project.desktop
 application/x-010workspace=010editor-project.desktop
 x-scheme-handler/figma=figma-linux.desktop
 x-scheme-handler/antigravity=antigravity.desktop
+x-scheme-handler/openmausbot=com.openmausbot.app.desktop
 
 [Added Associations]
 x-scheme-handler/http=zen.desktop;
@@ -39,3 +40,4 @@ application/x-extension-shtml=zen.desktop;
 application/xhtml+xml=zen.desktop;
 application/x-extension-xhtml=zen.desktop;
 application/x-extension-xht=zen.desktop;
+x-scheme-handler/openmausbot=com.openmausbot.app.desktop;
