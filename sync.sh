@@ -23,6 +23,7 @@ PATHS=(
   .config/omarchy/plugins/lyric.launchers
   .config/omarchy/plugins/lyric.tray
   .cache/nwg-dock-pinned
+  .config/nwg-dock-hyprland
   .local/share/applications/trash.desktop
   .local/share/applications/chrome-web.whatsapp.com__-Default.desktop
   .config/alacritty

@@ -1,0 +1,41 @@
+/* macOS liquid-glass dock: blurred rounded shelf, running-app dots, hover lift */
+window {
+  /* Very light tint: the compositor blur behind it does the frosting */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+#box {
+  padding: 6px 8px;
+}
+
+button, image {
+  background: none;
+  border-style: none;
+  box-shadow: none;
+  color: #eee;
+}
+
+button {
+  padding: 4px;
+  margin: 0 3px;
+  border-radius: 12px;
+  border-bottom: 2px solid transparent;
+  transition: all 150ms ease;
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  margin-top: -6px;
+}
+
+/* Running apps get a small dot under the icon, like macOS */
+#active {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.85);
+}
+
+button:focus {
+  box-shadow: none;
+}
