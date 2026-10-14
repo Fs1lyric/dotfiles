@@ -63,6 +63,9 @@ PROVIDERS = {
                        " | while read -r p; do printf '%s\\t%s\\t%s\\n' \"$p\" \"$p\" \"$current\"; done",
                        "powerprofilesctl set"),
 }
+DEFAULTS = shlex.quote(os.path.join(os.path.dirname(os.path.realpath(__file__)), "defaults.py"))
+for _kind in ("browser", "terminal", "files", "editor", "images", "pdf", "video", "music", "email"):
+    PROVIDERS[f"default-{_kind}"] = (f"python3 {DEFAULTS} list {_kind}", f"python3 {DEFAULTS} set {_kind}")
 
 
 @dataclass

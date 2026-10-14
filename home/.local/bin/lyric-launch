@@ -41,7 +41,8 @@ case $cmd in
   terminal) app xdg-terminal-exec --dir="$(terminal_cwd)" "$@" ;;
   tmux) app xdg-terminal-exec bash -c "tmux attach || tmux new -s Work" ;;
   browser)
-    desktop=$(xdg-settings get default-web-browser)
+    # xdg-mime, not xdg-settings: the latter misreports while $BROWSER is set.
+    desktop=$(xdg-mime query default x-scheme-handler/https)
     exe=$(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,/usr}/share/applications/"$desktop" 2>/dev/null | head -1)
     if "$exe" --help 2>/dev/null | grep -q MOZ_LOG; then private=--private-window; else private=--incognito; fi
     app "$exe" "${@/--private/$private}" ;;

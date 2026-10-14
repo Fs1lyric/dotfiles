@@ -41,6 +41,17 @@
   "setup.hypr": {"icon":"󱁻","label":"Hyprland config","action":"lyric-launch editor ~/.config/hypr/hyprland.lua"},
   "setup.menu": {"icon":"󰍜","label":"This menu","action":"lyric-launch editor ~/.config/omenu/menu.jsonc"},
 
+  "defaults": {"icon":"󰁕","label":"Defaults","aliases":["default-apps"]},
+  "defaults.browser": {"icon":"󰖟","label":"Web browser","provider":"default-browser"},
+  "defaults.terminal": {"icon":"󰆍","label":"Terminal","provider":"default-terminal"},
+  "defaults.files": {"icon":"󰉋","label":"File manager","provider":"default-files"},
+  "defaults.editor": {"icon":"󰷈","label":"Text editor","provider":"default-editor"},
+  "defaults.images": {"icon":"󰋩","label":"Image viewer","provider":"default-images"},
+  "defaults.pdf": {"icon":"󰈦","label":"PDF viewer","provider":"default-pdf"},
+  "defaults.video": {"icon":"󰕧","label":"Video player","provider":"default-video"},
+  "defaults.music": {"icon":"󰝚","label":"Music player","provider":"default-music"},
+  "defaults.email": {"icon":"󰇮","label":"Email","provider":"default-email"},
+
   "packages": {"icon":"󰣇","label":"Packages"},
   "packages.update": {"icon":"󰚰","label":"Update system","action":"lyric-launch tui --app-id=lyric.terminal lyric-pkg update"},
   "packages.install": {"icon":"󰣇","label":"Install package","action":"lyric-launch tui --app-id=lyric.terminal lyric-pkg install"},
