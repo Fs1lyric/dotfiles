@@ -1,0 +1,64 @@
+#!/bin/bash
+# Small desktop utilities for the keybindings and menu.
+#   nightlight            toggle hyprsunset between 4000K and 6500K
+#   ocr                   select a region, copy its text (tesseract)
+#   keys                  searchable list of Hyprland keybindings
+#   tmux-keys             tmux keybindings (prints when --print)
+#   time | weather        show as a notification
+#   remind | reminders | clear-reminders
+
+note() { notify-send -u low -a Desktop "$@"; }
+
+case ${1:-} in
+  nightlight)
+    pgrep -x hyprsunset >/dev/null || { setsid uwsm-app -- hyprsunset & sleep 0.5; }
+    cur=$(hyprctl hyprsunset temperature 2>/dev/null | grep -oE '[0-9]+' | head -1)
+    if [[ -z $cur || $cur -ge 6000 ]]; then t=4000; else t=6500; fi
+    for _ in {1..10}; do
+      hyprctl hyprsunset temperature $t >/dev/null 2>&1; sleep 0.2
+      [[ $(hyprctl hyprsunset temperature 2>/dev/null | grep -oE '[0-9]+' | head -1) == "$t" ]] && break
+    done
+    note "Night light ${t}K" ;;
+  ocr)
+    hyprpicker -r -z >/dev/null 2>&1 & freeze=$!
+    trap 'kill $freeze 2>/dev/null' EXIT
+    sleep .1
+    sel=$(slurp 2>/dev/null) || exit 0
+    text=$(grim -g "$sel" - | tesseract stdin stdout --oem 1 --psm 6 -l "${OCR_LANGS:-eng}" --dpi 300 -c preserve_interword_spaces=1 2>/dev/null)
+    [[ -n $text ]] || exit 1
+    printf "%s" "$text" | wl-copy
+    note "Copied text from selection" ;;
+  keys)
+    hyprctl binds -j | jq -r '
+      def mods: [if . % 2 >= 1 then "SHIFT" else empty end,
+                 if (. / 4 | floor) % 2 == 1 then "CTRL" else empty end,
+                 if (. / 8 | floor) % 2 == 1 then "ALT" else empty end,
+                 if (. / 64 | floor) % 2 == 1 then "SUPER" else empty end];
+      .[] | select(.description != "") |
+      "\((.modmask | mods) + [.key] | join(" + "))\t\(.description)"' |
+      sort -u | column -t -s $'\t' | fuzzel --dmenu --width 80 --lines 25 --prompt "keys  " >/dev/null ;;
+  tmux-keys)
+    out=$(tmux list-keys -N 2>/dev/null || tmux -L lyric-keys -f ~/.config/tmux/tmux.conf start \; list-keys -N)
+    if [[ ${2:-} == --print ]]; then echo "$out"; else fuzzel --dmenu --width 80 --lines 25 --prompt "tmux  " <<<"$out" >/dev/null; fi ;;
+  time) note "$(date +'%A %-d %B')" "$(date +'%H:%M')" ;;
+  weather) note "Weather" "$(curl -fsS --max-time 5 'https://wttr.in/?format=%l:+%c+%t+(feels+%f),+%w' || echo unavailable)" ;;
+  remind)
+    in=$(fuzzel --dmenu --lines 0 --prompt "remind in <minutes> <message>  ") || exit 0
+    mins=${in%% *}; msg=${in#* }
+    [[ $mins =~ ^[0-9]+$ ]] || { note "Reminder" "Start with a number of minutes"; exit 1; }
+    [[ $msg == "$in" ]] && msg="Reminder"
+    systemd-run --user --quiet --unit="lyric-reminder-$(date +%s)" --on-active="${mins}m" \
+      --description="$msg" notify-send -u critical -a Reminder "Reminder" "$msg"
+    note "Reminder set" "$msg in ${mins} min" ;;
+  reminders)
+    now=$(date +%s%6N)
+    list=$(systemctl --user list-timers 'lyric-reminder-*' --no-legend --output=json | jq -r '.[] | "\(.next) \(.activates)"' |
+      while read -r next unit; do
+        echo "$(( (next - now) / 60000000 )) min  $(systemctl --user show -p Description --value "$unit")"
+      done)
+    note "Reminders" "${list:-none}" ;;
+  clear-reminders)
+    systemctl --user stop 'lyric-reminder-*.timer' 2>/dev/null
+    note "Reminders cleared" ;;
+  *) sed -n '2,8s/^# \?//p' "$0" >&2; exit 1 ;;
+esac

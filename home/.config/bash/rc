@@ -1,0 +1,7 @@
+# Interactive bash setup (aliases, functions, prompt, completions).
+source ~/.config/bash/envs
+source ~/.config/bash/shell
+source ~/.config/bash/aliases
+for f in ~/.config/bash/fns/*; do source "$f"; done
+source ~/.config/bash/init
+[[ $- == *i* ]] && bind -f ~/.config/bash/inputrc

@@ -1,0 +1,48 @@
+#!/bin/bash
+# Watch systemd-coredump for crashes of this user's programs and offer a Claude
+# diagnosis (diagnose-crash skill) from the notification.
+set -uo pipefail
+
+readonly COREDUMP_MESSAGE_ID=fc2e22bc6ee647b6b90729ab34a250b1  # systemd.journal-fields(7)
+readonly dedupe_seconds=${CRASH_DEDUPE_SECONDS:-60}             # announce a crash loop once a minute
+readonly ignore_pattern=${CRASH_IGNORE:-}                        # ERE of names never worth announcing
+declare -A last_notified
+
+diagnose() {
+  local comm=$1 pid=$2 exe=$3 signal=$4 when
+  when=$(coredumpctl list "$pid" --no-pager --no-legend 2>/dev/null | tail -1 | cut -d' ' -f1-4)
+  lyric-launch tui --app-id=lyric.crash bash -c 'cd ~/claude && exec claude "$1"' _ \
+"A process crashed on this machine and I want to know why. What systemd-coredump recorded:
+  process: $comm
+  PID:     $pid
+  binary:  $exe
+  signal:  $signal
+  time:    ${when:-unknown}
+Use the diagnose-crash skill."
+}
+
+announce() {
+  # Waits for a click in the background so the watcher keeps reading the journal.
+  (
+    action=$(notify-send -a Crash -u normal -A default=Diagnose --wait \
+      "Process crashed: $1" "Click to diagnose with Claude") || exit 0
+    [[ $action == default ]] && diagnose "$@"
+  ) &
+}
+
+# -n 0 so a restart does not re-announce crashes already dealt with.
+journalctl -f -n 0 -o json "MESSAGE_ID=$COREDUMP_MESSAGE_ID" 2>/dev/null |
+  while IFS= read -r entry; do
+    IFS=$'\t' read -r uid comm pid exe signal < <(
+      jq -r '[(._UID // "-"), (.COREDUMP_COMM // "-"), (.COREDUMP_PID // "-"),
+              (.COREDUMP_EXE // "-"), (.COREDUMP_SIGNAL_NAME // "-")] | @tsv' <<<"$entry" 2>/dev/null
+    )
+    [[ $pid =~ ^[0-9]+$ && $uid =~ ^[0-9]+$ ]] || continue
+    ((uid == UID)) || continue
+    name=$comm
+    [[ $exe == /* ]] && name=${exe##*/}  # comm is truncated to 15 chars
+    [[ -n $ignore_pattern && $name =~ $ignore_pattern ]] && continue
+    now=$EPOCHSECONDS
+    (((now - ${last_notified[$name]:-0}) < dedupe_seconds)) && continue
+    announce "$name" "$pid" "$exe" "$signal" && last_notified[$name]=$now
+  done

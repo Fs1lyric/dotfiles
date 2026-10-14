@@ -1,5 +1,5 @@
 -- Keep only your personal input overrides here. Uncommented settings below
--- replace Omarchy's defaults.
+-- replace the defaults in hypr/lyric/input.lua.
 
 -- Keyboard layout and options.
 -- See https://wiki.hypr.land/Configuring/Basics/Variables/#input
@@ -33,7 +33,7 @@
 --       clickfinger_behavior = true,
 --
 --       -- Control the speed of your scrolling.
---       scroll_factor = 0.4,
+--       scroll_factor = 2.0,
 --
 --       -- Enable the touchpad while typing.
 --       disable_while_typing = false,

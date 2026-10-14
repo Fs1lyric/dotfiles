@@ -1,0 +1,26 @@
+#!/bin/bash
+# Package picker for the menu (runs inside a terminal).
+#   lyric-pkg install | aur | remove | update
+
+done_prompt() { echo; read -n 1 -s -r -p "Done. Press any key to close."; }
+pick() {
+  fzf --multi --preview "$1" --preview-window 'down:65%:wrap' \
+    --preview-label 'alt-p: toggle description, tab: multi-select' --preview-label-pos bottom \
+    --bind 'alt-p:toggle-preview' --bind 'alt-k:preview-up,alt-j:preview-down' \
+    --color "pointer:$2,marker:$2"
+}
+
+case ${1:-} in
+  install)
+    pkgs=$(pacman -Slq | pick 'pacman -Sii {1}' green)
+    [[ -n $pkgs ]] && sudo pacman -S --needed $pkgs && done_prompt ;;
+  aur)
+    pkgs=$(yay -Slqa | pick 'yay -Siia {1}' green)
+    [[ -n $pkgs ]] && yay -S --needed $(sed 's|^|aur/|' <<<"$pkgs") && done_prompt ;;
+  remove)
+    pkgs=$(yay -Qqe | pick 'yay -Qi {1}' red)
+    [[ -n $pkgs ]] && sudo pacman -Rns $pkgs && done_prompt ;;
+  update)
+    yay -Syu; done_prompt ;;
+  *) sed -n '2,3s/^# \?//p' "$0" >&2; exit 1 ;;
+esac

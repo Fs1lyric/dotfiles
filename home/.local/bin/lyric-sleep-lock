@@ -1,0 +1,18 @@
+#!/bin/bash
+# Lock the screen (Noctalia) before suspend. Holds a logind delay inhibitor,
+# waits for PrepareForSleep, locks, waits until the lock is up, then exits so
+# the inhibitor is released; systemd restarts it after resume.
+if [[ ${1:-} != --inhibited ]]; then
+  exec systemd-inhibit --what=sleep --mode=delay --who=lyric --why="Lock screen before suspend" "$0" --inhibited
+fi
+
+dbus-monitor --system "type='signal',sender='org.freedesktop.login1',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'" |
+  while IFS= read -r line; do
+    [[ $line == *"boolean true"* ]] || continue
+    noctalia msg session lock
+    for _ in {1..30}; do
+      noctalia msg status 2>/dev/null | jq -e .locked >/dev/null && break
+      sleep 0.1
+    done
+    exit 0
+  done

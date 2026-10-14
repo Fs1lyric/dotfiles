@@ -1,0 +1,62 @@
+{
+  // omenu menu. IDs are dotted paths: "capture.ocr" sits under "capture".
+  // Fields: icon, label, action (shell command), target (another id),
+  // provider (apps | power-profiles), aliases,
+  // when (hide row unless this succeeds), checked (append ✓ when it succeeds).
+  "apps": {"icon":"󰀻","label":"Apps","provider":"apps"},
+
+  "capture": {"icon":"󰄀","label":"Capture"},
+  "capture.region": {"icon":"󰩭","label":"Screenshot region","action":"noctalia msg screenshot-region"},
+  "capture.full": {"icon":"󰍹","label":"Screenshot screen","action":"noctalia msg screenshot-fullscreen"},
+  "capture.record": {"icon":"󰑊","label":"Record region","action":"lyric-record region"},
+  "capture.record-sound": {"icon":"󰍬","label":"Record region with sound","action":"lyric-record region --sound"},
+  "capture.record-stop": {"icon":"󰓛","label":"Stop recording","when":"pgrep -x gpu-screen-reco","action":"lyric-record stop"},
+  "capture.ocr": {"icon":"󰊄","label":"Copy text (OCR)","action":"lyric-util ocr"},
+  "capture.color": {"icon":"󰈊","label":"Colour picker","action":"hyprpicker -a"},
+
+  "toggle": {"icon":"󰔡","label":"Toggle"},
+  "toggle.nightlight": {"icon":"󰖔","label":"Night light","action":"lyric-util nightlight"},
+  "toggle.idle": {"icon":"󰒲","label":"Stay awake","action":"noctalia msg caffeine-toggle"},
+  "toggle.dnd": {"icon":"󰂛","label":"Do not disturb","checked":"[[ $(noctalia msg notification-dnd-status) == on ]]","action":"noctalia msg notification-dnd-toggle"},
+  "toggle.gaps": {"icon":"󱂬","label":"Window gaps","action":"lyric-window toggle window-no-gaps"},
+  "toggle.square": {"icon":"󰹑","label":"Single-window square aspect","action":"lyric-window toggle single-window-aspect-ratio"},
+
+  "style": {"icon":"󰏘","label":"Style","aliases":["theme","background"]},
+  "style.wallpaper": {"icon":"󰋩","label":"Wallpaper","action":"noctalia msg panel-toggle wallpaper"},
+  "style.random": {"icon":"󰒝","label":"Random wallpaper","action":"noctalia msg wallpaper-random"},
+  "style.scheme": {"icon":"󰢵","label":"Colour scheme","action":"noctalia msg settings-open"},
+
+  "remind": {"icon":"󰀠","label":"Reminders"},
+  "remind.set": {"icon":"󰀠","label":"Set reminder","action":"lyric-util remind"},
+  "remind.show": {"icon":"󰋚","label":"Show reminders","action":"lyric-util reminders"},
+  "remind.clear": {"icon":"󰩺","label":"Clear reminders","action":"lyric-util clear-reminders"},
+
+  "setup": {"icon":"󰒓","label":"Setup"},
+  "setup.quick": {"icon":"󰖩","label":"Wi-Fi, Bluetooth, audio","aliases":["network","audio","bluetooth"],"action":"noctalia msg panel-toggle control-center"},
+  "setup.network": {"icon":"󰛳","label":"Network (nmtui)","action":"lyric-launch tui --app-id=lyric.terminal nmtui"},
+  "setup.power": {"icon":"󰌪","label":"Power profile","provider":"power-profiles"},
+  "setup.monitors": {"icon":"󰍹","label":"Monitors","action":"lyric-launch editor ~/.config/hypr/monitors.lua"},
+  "setup.input": {"icon":"󰌌","label":"Input","action":"lyric-launch editor ~/.config/hypr/input.lua"},
+  "setup.keys": {"icon":"󰧹","label":"Keybindings","action":"lyric-launch editor ~/.config/hypr/bindings.lua"},
+  "setup.hypr": {"icon":"󱁻","label":"Hyprland config","action":"lyric-launch editor ~/.config/hypr/hyprland.lua"},
+  "setup.menu": {"icon":"󰍜","label":"This menu","action":"lyric-launch editor ~/.config/omenu/menu.jsonc"},
+
+  "packages": {"icon":"󰣇","label":"Packages"},
+  "packages.update": {"icon":"󰚰","label":"Update system","action":"lyric-launch tui --app-id=lyric.terminal lyric-pkg update"},
+  "packages.install": {"icon":"󰣇","label":"Install package","action":"lyric-launch tui --app-id=lyric.terminal lyric-pkg install"},
+  "packages.aur": {"icon":"󰣇","label":"Install from AUR","action":"lyric-launch tui --app-id=lyric.terminal lyric-pkg aur"},
+  "packages.remove": {"icon":"󰆴","label":"Remove package","action":"lyric-launch tui --app-id=lyric.terminal lyric-pkg remove"},
+
+  "learn": {"icon":"󰧑","label":"Learn"},
+  "learn.keys": {"icon":"󰌌","label":"Keybindings","action":"lyric-util keys"},
+  "learn.tmux": {"icon":"󰆍","label":"Tmux keybindings","action":"lyric-util tmux-keys"},
+  "learn.hyprland": {"icon":"󰗚","label":"Hyprland wiki","action":"lyric-launch webapp https://wiki.hypr.land/"},
+  "learn.arch": {"icon":"󰣇","label":"Arch wiki","action":"lyric-launch webapp https://wiki.archlinux.org/"},
+
+  "system": {"icon":"󰐥","label":"System","aliases":["power-menu"]},
+  "system.lock": {"icon":"󰌾","label":"Lock","action":"noctalia msg session lock"},
+  "system.suspend": {"icon":"󰒲","label":"Suspend","action":"systemctl suspend"},
+  "system.logout": {"icon":"󰍃","label":"Log out","action":"uwsm stop"},
+  "system.reboot": {"icon":"󰜉","label":"Reboot","action":"systemctl reboot"},
+  "system.shutdown": {"icon":"󰐥","label":"Shut down","action":"systemctl poweroff"},
+}

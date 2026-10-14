@@ -1,0 +1,72 @@
+#!/bin/bash
+# Window and layout actions for the keybindings.
+#   close-all | tiled-fullscreen | pop | transparency | layout | width save|restore
+#   scale up|down | toggle <flag>   (flags: window-no-gaps, single-window-aspect-ratio)
+
+STATE=${XDG_STATE_HOME:-$HOME/.local/state}/lyric
+dsp() { hyprctl dispatch "$1" >/dev/null; }
+active() { hyprctl activewindow -j; }
+note() { notify-send -u low -a Hyprland "$1"; }
+
+case ${1:-} in
+  close-all)
+    for addr in $(hyprctl clients -j | jq -r '.[].address'); do
+      dsp "hl.dsp.window.close({ window = \"address:$addr\" })"
+    done
+    dsp 'hl.dsp.focus({ workspace = "1" })' ;;
+  tiled-fullscreen)
+    if [[ $(active | jq -r '.fullscreenClient // 0') == 2 ]]; then c=0; else c=2; fi
+    dsp "hl.dsp.window.fullscreen_state({ internal = 0, client = $c })" ;;
+  pop)
+    win="address:$(active | jq -r .address)"
+    if [[ $(active | jq .pinned) == true ]]; then
+      dsp "hl.dsp.window.pin({ window = \"$win\" })"
+      dsp "hl.dsp.window.float({ window = \"$win\", action = \"toggle\" })"
+      dsp "hl.dsp.window.tag({ window = \"$win\", tag = \"-pop\" })"
+    else
+      dsp "hl.dsp.window.float({ window = \"$win\", action = \"toggle\" })"
+      dsp "hl.dsp.window.resize({ window = \"$win\", x = 1300, y = 900 })"
+      dsp "hl.dsp.window.center({ window = \"$win\" })"
+      dsp "hl.dsp.window.pin({ window = \"$win\" })"
+      dsp "hl.dsp.window.alter_zorder({ window = \"$win\", mode = \"top\" })"
+      dsp "hl.dsp.window.tag({ window = \"$win\", tag = \"+pop\" })"
+    fi ;;
+  transparency)
+    dsp "hl.dsp.window.set_prop({ window = \"address:$(active | jq -r .address)\", prop = \"opaque\", value = \"toggle\" })" ;;
+  layout)
+    ws=$(hyprctl activeworkspace -j)
+    id=$(jq -r .id <<<"$ws")
+    [[ $id =~ ^-?[0-9]+$ ]] || exit 1
+    if [[ $(jq -r .tiledLayout <<<"$ws") == dwindle ]]; then new=scrolling; else new=dwindle; fi
+    rule="hl.workspace_rule({ workspace = \"$id\", layout = \"$new\" })"
+    mkdir -p "$STATE/workspace-layouts"
+    echo "$rule" >"$STATE/workspace-layouts/$id.lua"
+    hyprctl eval "$rule" >/dev/null
+    note "Workspace layout set to $new" ;;
+  width)
+    file="$STATE/window-width"
+    if [[ ${2:-} == save ]]; then
+      active | jq -r '.size[0]' >"$file" && note "Saved window width $(cat "$file")px"
+    elif [[ -f $file ]]; then
+      win="address:$(active | jq -r .address)"
+      h=$(active | jq -r '.size[1]')
+      dsp "hl.dsp.window.resize({ window = \"$win\", x = $(cat "$file"), y = $h })"
+    fi ;;
+  scale)
+    mon=$(hyprctl monitors -j | jq -c '.[] | select(.focused)')
+    scales=(1 1.25 1.333333 1.5 1.6 1.666667 2 2.5 3)
+    cur=$(jq -r .scale <<<"$mon")
+    i=0; for n in "${!scales[@]}"; do awk "BEGIN{exit !(${scales[n]} <= $cur + 0.01)}" && i=$n; done
+    if [[ ${2:-} == up ]]; then ((i < ${#scales[@]} - 1)) && ((i++)); else ((i > 0)) && ((i--)); fi
+    hyprctl eval "$(jq -r --arg s "${scales[i]}" '"hl.monitor({ output = \"\(.name)\", mode = \"\(.width)x\(.height)@\(.refreshRate)\", position = \"auto\", scale = \($s) })"' <<<"$mon")" >/dev/null
+    note "Display scale ${scales[i]}" ;;
+  toggle)
+    flag=${2:?flag name}
+    src="$HOME/.config/hypr/lyric/toggles/$flag.lua"
+    dst="$STATE/toggles/$flag.lua"
+    [[ -f $src ]] || { echo "unknown flag: $flag" >&2; exit 1; }
+    if [[ -f $dst ]]; then rm "$dst"; state=off; else mkdir -p "$STATE/toggles"; cp "$src" "$dst"; state=on; fi
+    hyprctl reload >/dev/null
+    note "$flag $state" ;;
+  *) sed -n '2,4s/^# \?//p' "$0" >&2; exit 1 ;;
+esac

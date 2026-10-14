@@ -1,6 +1,6 @@
 # dotfiles
 
-My [Omarchy](https://omarchy.org) (Arch + Hyprland) setup. **[See it here →](https://fs1lyric.github.io/dotfiles/)**
+My Arch + Hyprland setup, with the [Noctalia](https://github.com/noctalia-dev/noctalia-shell) shell. **[See it here →](https://fs1lyric.github.io/dotfiles/)**
 
 ## What's here
 
@@ -9,7 +9,8 @@ My [Omarchy](https://omarchy.org) (Arch + Hyprland) setup. **[See it here →](h
 | Area | Files |
 | --- | --- |
 | Shell | `.bashrc`, `.bash_profile`, `.profile`, `starship.toml`, `fish/` |
-| Desktop | `hypr/` (Hyprland, Lua config), `omarchy/` (bar layout, hooks, menu, backgrounds, `lyric.launchers` bar plugin) |
+| Desktop | `hypr/` (Hyprland, Lua config), Noctalia settings (`.local/state/noctalia/settings.toml`), `lyric-theme/` (colors, wallpapers), `omenu/` (fuzzel/Noctalia menu), `lyric-*` helpers in `.local/bin`, `uwsm/env` |
+| Shell rc | `bash/` (aliases, functions, init; `.bashrc` sources it) |
 | Terminals | `alacritty/`, `ghostty/`, `kitty/`, `foot/`, `tmux/` |
 | Editors | `nvim/` (LazyVim), `doom/`, `.doom.d/` |
 | Firefox | `firefox/chrome/userChrome.css`, `userContent.css`, `user.js` (vertical tabs, compact, Zen-style) |

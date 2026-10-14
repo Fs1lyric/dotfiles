@@ -1,0 +1,59 @@
+#!/bin/bash
+# Launch apps the way the keybindings and menu expect.
+#   lyric-launch terminal [cmd...]        terminal in the focused terminal's cwd
+#   lyric-launch tmux                     terminal attached to tmux session "Work"
+#   lyric-launch browser [--private] [url]
+#   lyric-launch editor [file...]         $EDITOR (nvim) in a terminal
+#   lyric-launch files [--cwd]            Nautilus window
+#   lyric-launch tui [--app-id=ID] cmd [args...]
+#   lyric-launch webapp url [flags...]    Helium app window
+#   lyric-launch focus pattern cmd...     focus a window matching pattern, else run cmd
+#   lyric-launch focus-tui cmd            focus the TUI window, else open it
+#   lyric-launch focus-webapp name url    focus the web app window, else open it
+
+app() { exec setsid uwsm-app -- "$@"; }
+
+# cwd of the shell running in the focused terminal (falls back to $HOME).
+terminal_cwd() {
+  local pid child
+  pid=$(hyprctl activewindow -j | jq -r '.pid // empty')
+  if [[ -n $pid ]]; then
+    while child=$(pgrep -P "$pid" | tail -1) && [[ -n $child ]]; do pid=$child; done
+    readlink "/proc/$pid/cwd" 2>/dev/null && return
+  fi
+  echo "$HOME"
+}
+
+focus_or() {
+  local pattern=$1; shift
+  local address
+  address=$(hyprctl clients -j | jq -r --arg p "$pattern" \
+    '.[] | select((.class | test("\\b" + $p + "\\b"; "i")) or (.title | test("\\b" + $p + "\\b"; "i"))) | .address' | head -n1)
+  if [[ -n $address ]]; then
+    hyprctl dispatch "hl.dsp.focus({ window = \"address:$address\" })" >/dev/null
+  else
+    exec "$@"
+  fi
+}
+
+cmd=${1:-}; shift || true
+case $cmd in
+  terminal) app xdg-terminal-exec --dir="$(terminal_cwd)" "$@" ;;
+  tmux) app xdg-terminal-exec bash -c "tmux attach || tmux new -s Work" ;;
+  browser)
+    desktop=$(xdg-settings get default-web-browser)
+    exe=$(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,/usr}/share/applications/"$desktop" 2>/dev/null | head -1)
+    if "$exe" --help 2>/dev/null | grep -q MOZ_LOG; then private=--private-window; else private=--incognito; fi
+    app "$exe" "${@/--private/$private}" ;;
+  editor) exec "$0" tui "${EDITOR:-nvim}" "$@" ;;
+  files)
+    if [[ ${1:-} == --cwd ]]; then app nautilus --new-window "$(terminal_cwd)"; else app nautilus --new-window; fi ;;
+  tui)
+    if [[ ${1:-} == --app-id=* ]]; then id=${1#--app-id=}; shift; else id="lyric.$(basename "$1")"; fi
+    app xdg-terminal-exec --app-id="$id" -e "$@" ;;
+  webapp) app helium-browser --app="$1" "${@:2}" ;;
+  focus) focus_or "$@" ;;
+  focus-tui) focus_or "lyric.$(basename "$1")" "$0" tui "$@" ;;
+  focus-webapp) focus_or "$1" "$0" webapp "${@:2}" ;;
+  *) sed -n '2,13s/^# \?//p' "$0" >&2; exit 1 ;;
+esac

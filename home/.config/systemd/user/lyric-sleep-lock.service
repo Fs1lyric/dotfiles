@@ -1,0 +1,15 @@
+[Unit]
+Description=Lock the screen before suspend
+After=dbus.socket wayland-session-waitenv.service
+Requires=dbus.socket
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/lyric-sleep-lock
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

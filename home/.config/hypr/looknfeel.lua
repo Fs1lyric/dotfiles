@@ -1,4 +1,4 @@
--- Change the default Omarchy look'n'feel.
+-- Personal look'n'feel, on top of hypr/lyric/looknfeel.lua.
 
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#general
 -- hl.config({
@@ -49,29 +49,37 @@
 --   },
 -- })
 
--- Liquid glass: blur what sits behind the dock, top bar, menus and notifications.
--- Blur is switched on globally but turned off for every window, so only these layers get it.
+-- Black mica: every window is see-through over a heavy, darkened blur of the wallpaper.
+-- xray blurs only the wallpaper (not the windows stacked behind), which is what makes it mica.
+-- Lower brightness = blacker glass; raise the opacity numbers if text gets hard to read.
 hl.config({
   decoration = {
     blur = {
       enabled = true,
-      size = 10,
+      size = 8,
       passes = 3,
-      noise = 0.02,
+      noise = 0.015,
       contrast = 1.0,
-      brightness = 1.0,
-      vibrancy = 0.3,
+      brightness = 0.80,
+      vibrancy = 0.20,
+      xray = false,
+      new_optimizations = true,
     },
   },
 })
-o.window({ class = ".*" }, { no_blur = true })
+-- "active inactive": focused windows a touch more solid than unfocused ones.
+-- Targets the default-opacity tag plus browsers, so the apps the defaults keep solid
+-- (mpv, vlc, imv, Steam and its games, RetroArch, PiP, qemu, DaVinci, OBS...) stay solid.
+o.window({ tag = "default-opacity" }, { opacity = "0.85 0.80" })
+o.window({ tag = "chromium-based-browser" }, { opacity = "0.85 0.80" })
+o.window({ tag = "firefox-based-browser" }, { opacity = "0.85 0.80" })
+-- Terminals: window stays fully opaque so text is crisp; kitty makes only its background see-through.
+o.window({ tag = "terminal" }, { opacity = "1 1" })
+-- Vesktop draws its own see-through background (system24 theme), so keep the window itself opaque.
+o.window("^vesktop$", { opacity = "1 1" })
+-- Video web apps and other games stay solid.
+o.window("(^.+-youtube\\.com__.*$|^.+-app\\.zoom\\.us__wc_home.*$|^gamescope$|^steam_app_.*$|^lutris$|^heroic$)", { tag = "-default-opacity", opacity = "1 1" })
 hl.layer_rule({ match = { namespace = "nwg-dock" }, blur = true, ignore_alpha = 0.05 })
-for _, namespace in ipairs({
-  "omarchy-bar", "omarchy-menu", "omarchy-notifications", "omarchy-osd",
-  "omarchy-polkit", "omarchy-clipboard", "omarchy-emojis", "omarchy-reminders",
-}) do
-  hl.layer_rule({ match = { namespace = namespace }, blur = true, ignore_alpha = 0.05 })
-end
 
 -- macOS windows: rounded corners, a soft deep shadow, a hairline border
 -- (its color comes from the macOS Glass theme) and roomier gaps.

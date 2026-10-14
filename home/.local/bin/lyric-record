@@ -1,0 +1,32 @@
+#!/bin/bash
+# Toggle a screen recording with gpu-screen-recorder (replaces `caelestia record`).
+#   lyric-record [region|screen] [--sound]   start, or stop if one is already running
+#   lyric-record stop                        stop only
+set -euo pipefail
+
+dir="$HOME/Videos/Recordings"
+if pidof -q gpu-screen-recorder; then
+  kill -INT $(pidof gpu-screen-recorder)
+  sleep 0.5
+  last=$(ls -t "$dir"/*.mp4 2>/dev/null | head -1)
+  notify-send -a Recorder "Recording saved" "${last:-$dir}"
+  exit 0
+fi
+[[ ${1:-} == stop ]] && exit 0
+
+mode=${1:-region}
+sound=()
+[[ ${2:-} == --sound ]] && sound=(-a default_output)
+
+rate=$(hyprctl monitors -j | jq -r '[.[] | select(.focused)][0].refreshRate | round')
+if [[ $mode == region ]]; then
+  region=$(slurp -f "%wx%h+%x+%y") || exit 0
+  target=(-w region -region "$region")
+else
+  target=(-w "$(hyprctl monitors -j | jq -r '[.[] | select(.focused)][0].name')")
+fi
+
+mkdir -p "$dir"
+out="$dir/recording-$(date +%Y%m%d_%H%M%S).mp4"
+setsid gpu-screen-recorder "${target[@]}" -f "$rate" "${sound[@]}" -o "$out" >/dev/null 2>&1 < /dev/null &
+notify-send -a Recorder "Recording started" "Run the same key again to stop"

@@ -12,20 +12,29 @@ PATHS=(
   .bash_profile
   .profile
   .config/hypr
-  .config/omarchy/shell.json
-  .config/omarchy/keystroke.json
-  .config/omarchy/defaults
-  .config/omarchy/branding
-  .config/omarchy/extensions
-  .config/omarchy/hooks
-  .config/omarchy/themed
-  .config/omarchy/backgrounds
-  .config/omarchy/plugins/lyric.launchers
-  .config/omarchy/plugins/lyric.tray
+  .config/bash
+  .config/uwsm
+  .config/lyric-theme
+  .config/omenu
+  .config/noctalia
+  .local/state/noctalia/settings.toml
+  .local/share/omenu
+  .local/share/lyric
+  .local/bin/lyric-crash-watch
+  .local/bin/lyric-launch
+  .local/bin/lyric-pkg
+  .local/bin/lyric-record
+  .local/bin/lyric-sleep-lock
+  .local/bin/lyric-util
+  .local/bin/lyric-window
+  .local/bin/omenu
+  .config/systemd/user/lyric-crash-watch.service
+  .config/systemd/user/lyric-sleep-lock.service
+  .config/systemd/user/fcitx5.service
+  .config/systemd/user/update-cli-tools.service
+  .config/systemd/user/update-cli-tools.timer
   .cache/nwg-dock-pinned
   .config/nwg-dock-hyprland
-  .config/systemd/user/omarchy-crash-watch.service.d
-  .local/bin/omarchy-crash-watch-normal
   .local/share/applications/trash.desktop
   .local/share/applications/chrome-web.whatsapp.com__-Default.desktop
   .config/alacritty
@@ -49,7 +58,7 @@ PATHS=(
 )
 
 # Never copy these
-EXCLUDES=(--exclude='*.bak' --exclude='*.bak.*' --exclude='*.old' --exclude='.git')
+EXCLUDES=(--exclude='*.bak' --exclude='*.bak.*' --exclude='*.old' --exclude='.git' --exclude='__pycache__')
 
 for p in "${PATHS[@]}"; do
   src="$HOME/$p"

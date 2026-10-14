@@ -1,0 +1,17 @@
+[Unit]
+Description=Fcitx5 input method (XCompose sequences)
+# Needs the compositor's WAYLAND_DISPLAY; follow the session so it never lingers
+# against a dead socket, and skip starts from non-graphical (SSH) sessions.
+After=graphical-session.target
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/fcitx5 --disable notificationitem
+# fcitx5 exits 0 when another instance owns its bus name; restart anyway.
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target
