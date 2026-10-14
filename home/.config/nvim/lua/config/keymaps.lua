@@ -1,4 +1,4 @@
-
+vim.keymap.set("n", "<leader>ml", function()
   vim.cmd("write")
   vim.cmd("!manim -pql " .. vim.fn.expand("%"))
 end, { desc = "Manim: render preview (low quality)" })
