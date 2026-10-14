@@ -236,3 +236,27 @@ notification-message,
     border-radius: 0px !important;
     font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace !important;
 }
+
+/* --------------------------------------------------------------------------
+   Translucent glass (needs zen.widget.linux.transparency in user.js)
+   -------------------------------------------------------------------------- */
+:root,
+#main-window,
+#browser,
+#navigator-toolbox,
+#zen-main-app-wrapper,
+#zen-appcontent-wrapper,
+#tabbrowser-tabpanels,
+.browserContainer,
+.browserStack,
+browser[type="content"] {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+:root {
+    --zen-main-browser-background: rgba(12, 12, 16, 0.50) !important;
+    --zen-themed-toolbar-bg: transparent !important;
+}
+#main-window {
+    background-color: rgba(12, 12, 16, 0.50) !important;
+}

@@ -22,3 +22,29 @@
         border-radius: 0 !important;
     }
 }
+
+/* ── Translucent glass on web pages; videos stay solid ──────────────────── */
+@-moz-document url-prefix("http://"), url-prefix("https://"), url-prefix("file://"), url-prefix("about:") {
+    html, body {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    video, iframe[src*="youtube.com/embed"], iframe[src*="player.vimeo.com"] {
+        background-color: #000 !important;
+        opacity: 1 !important;
+    }
+}
+/* Video pages: keep the whole player area solid */
+@-moz-document domain("youtube.com"), domain("twitch.tv"), domain("netflix.com"), domain("vimeo.com") {
+    #movie_player, .html5-video-player, #player-container, ytd-watch-flexy #player,
+    .video-player, [data-a-target="video-player"] {
+        background-color: #000 !important;
+    }
+}
+
+/* ── New tab wallpaper ──────────────────────────────────────────────────── */
+@-moz-document url("about:newtab"), url("about:home"), url("about:privatebrowsing") {
+    html body {
+        background: url("newtab-wallpaper.jpg") center / cover no-repeat fixed !important;
+    }
+}
