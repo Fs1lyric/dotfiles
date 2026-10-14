@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Existential Dotfiles</title>
-  <meta name="description" content="Lyric's Arch Linux setup: Hyprland and the quiet, slate Existential theme. Configs for Hyprland, kitty, Neovim, tmux, Firefox and more, with a one-command install.">
+  <meta name="description" content="Lyric's Arch Linux setup: Hyprland, the Noctalia shell and the quiet, slate Existential theme. Configs for Hyprland, kitty, Neovim, tmux, Firefox and more, with a one-command install.">
   <meta name="theme-color" content="#e9ebef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#080a0b" media="(prefers-color-scheme: dark)">
   <meta property="og:title" content="Existential Dotfiles">
-  <meta property="og:description" content="Lyric's Arch setup: Hyprland and the Existential theme.">
+  <meta property="og:description" content="Lyric's Arch setup: Hyprland, Noctalia and the Existential theme.">
   <meta property="og:image" content="https://fs1lyric.github.io/dotfiles/assets/desktop.webp">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23101315'/%3E%3Cpath d='M16 5 L26 26 L16 21 L6 26 Z' fill='%23d9aab3'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -162,7 +162,7 @@
       white-space: nowrap;
     }
 
-    /* ---------- top bar: a copy of the Omarchy shell bar ---------- */
+    /* ---------- top bar: a copy of the Noctalia shell bar ---------- */
     .bar {
       position: sticky;
       top: 0;
@@ -659,7 +659,7 @@
       <div class="win hero">
         <div class="win-title"><span>kitty - ~/dotfiles</span><span aria-hidden="true">1</span></div>
         <div class="win-body">
-          <p class="eyebrow">Arch Linux · Hyprland</p>
+          <p class="eyebrow">Arch Linux · Hyprland · Noctalia</p>
           <h1 id="hero-title">existential<span class="cursor" aria-hidden="true"></span></h1>
           <p class="lede">Lyric’s desktop. A monochrome slate theme, a tiled Hyprland workspace and a terminal-first setup that stays out of the way. Every config is in this repo, and one script puts it on your machine.</p>
 
@@ -709,6 +709,7 @@
               <dt>OS</dt><dd>Arch Linux</dd>
               <dt>Kernel</dt><dd>Linux 7.2.5</dd>
               <dt>WM</dt><dd>Hyprland 0.56.2</dd>
+              <dt>DE</dt><dd>Noctalia 5</dd>
               <dt>Terminal</dt><dd>kitty 0.48.2</dd>
               <dt>Shell</dt><dd>bash 5.3.15</dd>
               <dt>Editor</dt><dd>Neovim 0.12 (LazyVim)</dd>
@@ -774,6 +775,7 @@
         <p class="lede"><code>home/</code> mirrors your home folder, so each path below is exactly where the file lands. The Firefox and Zen folders go into each browser’s profile, wherever it lives.</p>
         <ul class="tree">
           <li><span class="glyph" aria-hidden="true">▸</span><a href="https://github.com/Fs1lyric/dotfiles/tree/master/home/.config/hypr">.config/hypr/</a><p>Hyprland in Lua: monitors, input, look and feel, keybinding overrides.</p></li>
+          <li><span class="glyph" aria-hidden="true">▸</span><a href="https://github.com/Fs1lyric/dotfiles/tree/master/home/.local/state/noctalia">.local/state/noctalia/</a><p>Noctalia shell settings: the bar, lock screen, wallpaper and the Oxocarbon palette.</p></li>
           <li><span class="glyph" aria-hidden="true">▸</span><a href="https://github.com/Fs1lyric/dotfiles/tree/master/home/.config/lyric-theme">.config/lyric-theme/</a><p>The frozen color theme and wallpapers, applied across the terminals, editors and the Noctalia shell.</p></li>
           <li><span class="glyph" aria-hidden="true">▸</span><a href="https://github.com/Fs1lyric/dotfiles/tree/master/home/.config/nvim">.config/nvim/</a><p>LazyVim with neo-tree and Python extras; follows the system theme live.</p></li>
           <li><span class="glyph" aria-hidden="true">▸</span><a href="https://github.com/Fs1lyric/dotfiles/tree/master/home/.config/kitty">.config/kitty/</a><p>The main terminal. Alacritty, Ghostty and foot configs are there too.</p></li>
@@ -824,7 +826,7 @@
             <h3>Sign in and install the tools</h3>
             <div class="step-body">
               <div class="term"><div class="term-row"><pre><span class="prompt" aria-hidden="true">❯ </span><code id="cmd-tools">gh auth login &amp;&amp; gh auth setup-git &amp;&amp; mise install</code></pre><button class="copy" type="button" data-copy="cmd-tools">Copy</button></div></div>
-              <p>Then log out and back in so Hyprland and the bar pick everything up.</p>
+              <p>Then log out and back in so Hyprland and Noctalia pick everything up.</p>
             </div>
           </li>
         </ol>

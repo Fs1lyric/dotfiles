@@ -2,7 +2,7 @@
 ;;
 ;; Copyright (C) 2026
 ;;
-;; Author:  <lyrilyric@omarchy>
+;; Author:  <lyric@archy>
 ;; Created: September 03, 2026
 ;; Modified: September 03, 2026
 ;; Version: 0.0.1

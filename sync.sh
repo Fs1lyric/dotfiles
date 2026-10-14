@@ -18,6 +18,7 @@ PATHS=(
   .config/omenu
   .config/noctalia
   .local/state/noctalia/settings.toml
+  .local/state/noctalia/community-palettes
   .local/share/omenu
   .local/share/lyric
   .local/bin/lyric-crash-watch
