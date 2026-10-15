@@ -77,6 +77,9 @@ o.window({ tag = "firefox-based-browser" }, { opacity = "0.85 0.80" })
 o.window({ tag = "terminal" }, { opacity = "1 1" })
 -- Vesktop draws its own see-through background (system24 theme), so keep the window itself opaque.
 o.window("^vesktop$", { opacity = "1 1" })
+-- Zen draws its own glass (user.js + userChrome/userContent), so the window stays opaque
+-- and videos are never see-through.
+o.window("^zen$", { opacity = "1 1" })
 -- Video web apps and other games stay solid.
 o.window("(^.+-youtube\\.com__.*$|^.+-app\\.zoom\\.us__wc_home.*$|^gamescope$|^steam_app_.*$|^lutris$|^heroic$)", { tag = "-default-opacity", opacity = "1 1" })
 hl.layer_rule({ match = { namespace = "nwg-dock" }, blur = true, ignore_alpha = 0.05 })
