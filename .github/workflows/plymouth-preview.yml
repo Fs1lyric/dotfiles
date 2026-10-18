@@ -24,8 +24,8 @@ jobs:
           mkdir -p /run/plymouth shots
           Xvfb :99 -screen 0 1920x1080x24 & sleep 2
           export DISPLAY=:99
-          plymouthd --debug --debug-file=plymouthd.log --no-daemon \
-            --kernel-command-line="splash plymouth.ignore-udev" &
+          plymouthd --debug --debug-file="$PWD/plymouthd.log" --no-daemon \
+            --kernel-command-line="splash plymouth.ignore-udev plymouth.graphical plymouth.force-splash" &
           sleep 3
           plymouth show-splash; sleep 2
           import -window root shots/1-splash.png
@@ -38,6 +38,7 @@ jobs:
           xdotool key Return; sleep 2
           import -window root shots/4-unlocked.png
           plymouth quit || true
+          grep -iE "renderer|display|x11|script|error|fail" plymouthd.log | head -60
       - if: always()
         uses: actions/upload-artifact@v4
         with:
