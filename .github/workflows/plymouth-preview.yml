@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install
-        run: pacman -Syu --noconfirm plymouth imagemagick ttf-roboto-mono xorg-server-xvfb xdotool
+        run: pacman -Syu --noconfirm plymouth imagemagick ttf-roboto-mono xorg-server-xvfb xdotool gtk3
       - name: Bake and install theme
         run: |
           magick -size 1920x1080 plasma:steelblue-gray20 -blur 0x3 wall.png
