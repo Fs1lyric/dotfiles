@@ -1,0 +1,68 @@
+# Lyric boot splash: the LUKS passphrase prompt, styled like hyprlock.
+# Every graphic is a PNG baked by ../gen.sh, so the initramfs needs no fonts.
+
+W = Window.GetWidth();
+H = Window.GetHeight();
+
+bg = Sprite(Image("bg.png").Scale(W, H));
+bg.SetPosition(0, 0, -100);
+
+fun centered(image, y, z) {
+    s = Sprite(image);
+    s.SetPosition(Math.Int((W - image.GetWidth()) / 2), Math.Int(y), z);
+    return s;
+}
+
+# Text block sits where hyprlock's clock and date sit.
+title_img = Image("title.png");
+title = centered(title_img, H * 0.12, 10);
+subtitle = centered(Image("subtitle.png"), H * 0.12 + title_img.GetHeight() + 12, 10);
+
+field_img = Image("field.png");
+field_y = Math.Int((H - field_img.GetHeight()) / 2);
+field = centered(field_img, field_y, 10);
+layout = centered(Image("layout.png"), field_y + field_img.GetHeight() + 22, 10);
+
+dot_img = Image("dot.png");
+DOT = dot_img.GetWidth();
+GAP = Math.Int(DOT * 0.9);
+MAX_DOTS = Math.Int((field_img.GetWidth() - 60) / (DOT + GAP));
+dots = [];
+for (i = 0; i < MAX_DOTS; i++) {
+    dots[i] = Sprite(dot_img);
+    dots[i].SetOpacity(0);
+}
+
+prompt_items = [title, subtitle, field, layout];
+
+fun show_prompt(opacity) {
+    for (i = 0; i < 4; i++)
+        prompt_items[i].SetOpacity(opacity);
+}
+
+fun set_dots(count) {
+    if (count > MAX_DOTS) count = MAX_DOTS;
+    row = count * DOT + (count - 1) * GAP;
+    x0 = Math.Int((W - row) / 2);
+    y = Math.Int(field_y + (field_img.GetHeight() - DOT) / 2);
+    for (i = 0; i < MAX_DOTS; i++) {
+        dots[i].SetPosition(x0 + i * (DOT + GAP), y, 20);
+        if (i < count) dots[i].SetOpacity(1);
+        else dots[i].SetOpacity(0);
+    }
+}
+
+fun password_cb(prompt, bullets) {
+    show_prompt(1);
+    set_dots(bullets);
+}
+Plymouth.SetDisplayPasswordFunction(password_cb);
+
+# Once the disk is unlocked, leave just the wallpaper on screen.
+fun normal_cb() {
+    show_prompt(0);
+    set_dots(0);
+}
+Plymouth.SetDisplayNormalFunction(normal_cb);
+
+show_prompt(0);
