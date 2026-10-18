@@ -16,7 +16,7 @@ jobs:
         run: |
           magick -size 1920x1080 plasma:steelblue-gray20 -blur 0x3 wall.png
           d=/usr/share/plymouth/themes/lyric
-          plymouth/gen.sh wall.png "$d" archy
+          plymouth/gen.sh wall.png "$d"
           cp plymouth/lyric/lyric.{plymouth,script} "$d"/
           plymouth-set-default-theme lyric
       - name: Render prompt
@@ -28,6 +28,10 @@ jobs:
             --kernel-command-line="splash plymouth.ignore-udev plymouth.graphical plymouth.force-splash" &
           sleep 3
           plymouth show-splash; sleep 2
+          # Run the real initcpio hook (Dhaka zone, as on archy).
+          echo '<+06>-6' > /etc/lyric-tz
+          . plymouth/initcpio/hooks/lyric-clock && run_hook; sleep 2
+          TZ='<+06>-6' date '+expected: %H:%M|%A, %d %B %Y'
           import -window root shots/1-splash.png
           plymouth ask-for-password --prompt="Password for cryptroot" > /dev/null &
           sleep 2
@@ -37,6 +41,10 @@ jobs:
           import -window root shots/3-typed.png
           xdotool key Return; sleep 2
           import -window root shots/4-unlocked.png
+          plymouth update --status="23:59|Wednesday, 30 September 2026"
+          plymouth ask-for-password --prompt=again > /dev/null &
+          run_cleanuphook; sleep 2
+          import -window root shots/5-longest-date.png
           plymouth quit || true
           grep -iE "renderer|display|x11|script|error|fail" plymouthd.log | head -60
       - if: always()

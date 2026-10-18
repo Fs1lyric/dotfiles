@@ -1,0 +1,11 @@
+#!/bin/bash
+
+build() {
+    add_runscript
+    # The RTC holds UTC; ship the zone as a POSIX TZ string (last line of TZif).
+    tail -n1 /etc/localtime > "$BUILDROOT/etc/lyric-tz"
+}
+
+help() {
+    echo "Sends the time to the Lyric plymouth splash so it can show a clock."
+}

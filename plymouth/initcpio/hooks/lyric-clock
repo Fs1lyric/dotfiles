@@ -1,0 +1,20 @@
+#!/usr/bin/ash
+# Feed the Lyric splash the time once a second while plymouth is up.
+# The splash parses "HH:MM|Weekday, DD Month YYYY" from the status line.
+
+run_hook() {
+    command -v plymouth >/dev/null 2>&1 || return 0
+    (
+        TZ=$(cat /etc/lyric-tz 2>/dev/null)
+        export TZ
+        while plymouth --ping; do
+            plymouth update --status="$(date '+%H:%M|%A, %d %B %Y')"
+            sleep 1
+        done
+    ) &
+    lyric_clock_pid=$!
+}
+
+run_cleanuphook() {
+    [ -n "$lyric_clock_pid" ] && kill "$lyric_clock_pid" 2>/dev/null
+}

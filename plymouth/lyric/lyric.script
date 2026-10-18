@@ -1,5 +1,6 @@
 # Lyric boot splash: the LUKS passphrase prompt, styled like hyprlock.
 # Every graphic is a PNG baked by ../gen.sh, so the initramfs needs no fonts.
+# The time arrives as a status line from the lyric-clock initcpio hook.
 
 W = Window.GetWidth();
 H = Window.GetHeight();
@@ -7,16 +8,29 @@ H = Window.GetHeight();
 bg = Sprite(Image("bg.png").Scale(W, H));
 bg.SetPosition(0, 0, -100);
 
+# Must match the charsets in ../gen.sh.
+BIG_CHARS = "0123456789:";
+SMALL_CHARS = "0123456789:, ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+for (i = 0; i < BIG_CHARS.Length(); i++)
+    big[BIG_CHARS.CharAt(i)] = Image("big-" + i + ".png");
+for (i = 0; i < SMALL_CHARS.Length(); i++)
+    small[SMALL_CHARS.CharAt(i)] = Image("small-" + i + ".png");
+BIG_W = big["0"].GetWidth();
+BIG_H = big["0"].GetHeight();
+SMALL_W = small["0"].GetWidth();
+
+CLOCK_LEN = 5;   # HH:MM
+DATE_LEN = 32;   # "Wednesday, 30 September 2026" is 28
+for (i = 0; i < CLOCK_LEN; i++) clock_spr[i] = Sprite();
+for (i = 0; i < DATE_LEN; i++) date_spr[i] = Sprite();
+clock_y = Math.Int(H * 0.10);
+date_y = clock_y + BIG_H + 4;
+
 fun centered(image, y, z) {
     s = Sprite(image);
     s.SetPosition(Math.Int((W - image.GetWidth()) / 2), Math.Int(y), z);
     return s;
 }
-
-# Text block sits where hyprlock's clock and date sit.
-title_img = Image("title.png");
-title = centered(title_img, H * 0.12, 10);
-subtitle = centered(Image("subtitle.png"), H * 0.12 + title_img.GetHeight() + 12, 10);
 
 field_img = Image("field.png");
 field_y = Math.Int((H - field_img.GetHeight()) / 2);
@@ -27,17 +41,36 @@ dot_img = Image("dot.png");
 DOT = dot_img.GetWidth();
 GAP = Math.Int(DOT * 0.9);
 MAX_DOTS = Math.Int((field_img.GetWidth() - 60) / (DOT + GAP));
-dots = [];
 for (i = 0; i < MAX_DOTS; i++) {
     dots[i] = Sprite(dot_img);
     dots[i].SetOpacity(0);
 }
 
-prompt_items = [title, subtitle, field, layout];
+prompt_on = 0;
+clock_text = "";
+date_text = "";
 
-fun show_prompt(opacity) {
-    for (i = 0; i < 4; i++)
-        prompt_items[i].SetOpacity(opacity);
+# Lay out str in a pool of sprites, one glyph each, centred on the screen.
+fun spell(pool, size, glyphs, adv, str, y, opacity) {
+    len = str.Length();
+    if (len > size) len = size;
+    x0 = Math.Int((W - len * adv) / 2);
+    for (i = 0; i < size; i++) {
+        if (i < len && glyphs[str.CharAt(i)]) {
+            pool[i].SetImage(glyphs[str.CharAt(i)]);
+            pool[i].SetPosition(x0 + i * adv, y, 10);
+            pool[i].SetOpacity(opacity);
+        } else {
+            pool[i].SetOpacity(0);
+        }
+    }
+}
+
+fun redraw() {
+    spell(clock_spr, CLOCK_LEN, big, BIG_W, clock_text, clock_y, prompt_on);
+    spell(date_spr, DATE_LEN, small, SMALL_W, date_text, date_y, prompt_on);
+    field.SetOpacity(prompt_on);
+    layout.SetOpacity(prompt_on);
 }
 
 fun set_dots(count) {
@@ -52,17 +85,28 @@ fun set_dots(count) {
     }
 }
 
+# "HH:MM|Friday, 28 August 2026"; anything else is some other status.
+fun status_cb(status) {
+    if (status.CharAt(2) != ":" || status.CharAt(5) != "|") return;
+    global.clock_text = status.SubString(0, 5);
+    global.date_text = status.SubString(6, status.Length());
+    redraw();
+}
+Plymouth.SetUpdateStatusFunction(status_cb);
+
 fun password_cb(prompt, bullets) {
-    show_prompt(1);
+    global.prompt_on = 1;
+    redraw();
     set_dots(bullets);
 }
 Plymouth.SetDisplayPasswordFunction(password_cb);
 
 # Once the disk is unlocked, leave just the wallpaper on screen.
 fun normal_cb() {
-    show_prompt(0);
+    global.prompt_on = 0;
+    redraw();
     set_dots(0);
 }
 Plymouth.SetDisplayNormalFunction(normal_cb);
 
-show_prompt(0);
+redraw();
